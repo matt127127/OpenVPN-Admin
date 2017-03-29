@@ -219,6 +219,9 @@ sed -i "s/PASS=''/PASS='$mysql_pass'/" "/etc/openvpn/scripts/config.sh"
 mkdir "$openvpn_admin"
 cp -r "$base_path/"{index.php,sql,bower.json,.bowerrc,js,include,css,installation/client-conf} "$openvpn_admin"
 
+sed -i "s/DocumentRoot \/var\/www\/html/DocumentRoot $openvpn_admin" /etc/apache2/sites-available/000-default.conf
+service apache2 reload
+
 # New workspace
 cd "$openvpn_admin"
 
@@ -241,8 +244,6 @@ chown -R "$user:$group" "$openvpn_admin"
 printf "\033[1m\n#################################### Finish ####################################\n"
 
 echo -e "# Congratulations, you have successfully setup OpenVPN-Admin! #\r"
-echo -e "Please, finish the installation by configuring your web server (Apache, NGinx...)"
-echo -e "and install the web application by visiting http://your-installation/index.php?installation\r"
+echo -e "Open & setup web application by visiting http://$ip_server/index.php?installation\r"
 echo -e "Then, you will be able to run OpenVPN with systemctl start openvpn@server\r"
-echo "Please, report any issues here https://github.com/Chocobozzz/OpenVPN-Admin"
 printf "\n################################################################################ \033[0m\n"
